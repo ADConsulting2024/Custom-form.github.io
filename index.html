@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Connect your data</title>
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+		:root {
+			--ink: #182321;
+			--muted: #687773;
+			--paper: #f5f7f2;
+			--panel: #ffffff;
+			--line: #dce5df;
+			--accent: #196b52;
+			--accent-dark: #0f4d3b;
+			--mint: #dcefe5;
+			--gold: #e5b85c;
+		}
+
+		* { box-sizing: border-box; }
+
+		body {
+			margin: 0;
+			color: var(--ink);
+			background: var(--paper);
+			font-family: 'DM Sans', sans-serif;
+		}
+
+		.page {
+			min-height: 100vh;
+			padding: 48px 24px 72px;
+			background: radial-gradient(circle at 9% 10%, #e2f1e5 0 14%, transparent 34%),
+				linear-gradient(135deg, #f8faf6 0%, #eef4ed 48%, #f7f5ec 100%);
+		}
+
+		.shell { max-width: 1040px; margin: 0 auto; }
+
+		.brand {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 56px;
+			font-weight: 700;
+		}
+
+		.brand-mark {
+			width: 34px;
+			height: 34px;
+			display: grid;
+			place-items: center;
+			color: #fff;
+			background: var(--accent);
+			border-radius: 10px 10px 10px 2px;
+			font-family: 'Space Grotesk', sans-serif;
+			font-size: 17px;
+		}
+
+		.eyebrow {
+			margin: 0 0 14px;
+			color: var(--accent);
+			font-size: 12px;
+			font-weight: 700;
+			letter-spacing: .12em;
+			text-transform: uppercase;
+		}
+
+		h1, h2 { font-family: 'Space Grotesk', sans-serif; }
+
+		h1 {
+			max-width: 640px;
+			margin: 0;
+			font-size: clamp(2.7rem, 6vw, 5.2rem);
+			line-height: .98;
+			letter-spacing: -.045em;
+		}
+
+		.intro {
+			max-width: 540px;
+			margin: 22px 0 44px;
+			color: var(--muted);
+			font-size: 18px;
+			line-height: 1.6;
+		}
+
+		.content {
+			display: grid;
+			grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr);
+			gap: 24px;
+			align-items: start;
+		}
+
+		.form-panel, .info-panel {
+			background: rgba(255, 255, 255, .88);
+			border: 1px solid var(--line);
+			box-shadow: 0 18px 50px rgba(40, 69, 58, .08);
+		}
+
+		.form-panel { padding: clamp(24px, 5vw, 42px); border-radius: 18px; }
+		.info-panel { padding: 28px; border-radius: 18px; }
+
+		.form-heading { display: flex; justify-content: space-between; gap: 16px; align-items: start; margin-bottom: 28px; }
+		h2 { margin: 0; font-size: 24px; letter-spacing: -.025em; }
+		.required { color: var(--muted); font-size: 12px; }
+
+		.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+		.field { display: grid; gap: 8px; }
+		.field.full { grid-column: 1 / -1; }
+		label { font-size: 13px; font-weight: 700; }
+		input, select, textarea {
+			width: 100%;
+			border: 1px solid var(--line);
+			border-radius: 8px;
+			padding: 13px 14px;
+			color: var(--ink);
+			background: #fbfcfa;
+			font: inherit;
+			outline: none;
+			transition: border-color .2s, box-shadow .2s, background .2s;
+		}
+		textarea { min-height: 116px; resize: vertical; }
+		input:focus, select:focus, textarea:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(25, 107, 82, .12); }
+		input::placeholder, textarea::placeholder { color: #9aa8a2; }
+
+		.submit-row { display: flex; align-items: center; gap: 18px; margin-top: 28px; }
+		button {
+			border: 0;
+			border-radius: 8px;
+			padding: 14px 22px;
+			color: #fff;
+			background: var(--accent);
+			font: 700 14px 'DM Sans', sans-serif;
+			cursor: pointer;
+			transition: background .2s, transform .2s;
+		}
+		button:hover { background: var(--accent-dark); transform: translateY(-1px); }
+		button:disabled { cursor: wait; opacity: .65; transform: none; }
+		.status { min-height: 20px; color: var(--muted); font-size: 13px; }
+		.status.success { color: var(--accent); }
+		.status.error { color: #a34335; }
+
+		.info-panel { position: relative; overflow: hidden; background: var(--accent-dark); color: #fff; border-color: var(--accent-dark); }
+		.info-panel::after { content: ''; position: absolute; width: 150px; height: 150px; right: -66px; top: -66px; border: 22px solid rgba(229, 184, 92, .8); border-radius: 50%; }
+		.info-panel h2 { position: relative; z-index: 1; max-width: 190px; margin-bottom: 42px; font-size: 22px; }
+		.steps { display: grid; gap: 26px; }
+		.step { display: grid; grid-template-columns: 30px 1fr; gap: 12px; }
+		.number { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.35); border-radius: 50%; color: var(--gold); font-size: 12px; font-weight: 700; }
+		.step strong { display: block; margin-bottom: 5px; font-size: 14px; }
+		.step span { display: block; color: #bdd2c8; font-size: 13px; line-height: 1.5; }
+
+		@media (max-width: 720px) {
+			.page { padding: 28px 16px 48px; }
+			.brand { margin-bottom: 42px; }
+			.intro { margin-bottom: 30px; font-size: 16px; }
+			.content, .fields { grid-template-columns: 1fr; }
+			.field.full { grid-column: auto; }
+			.info-panel h2 { margin-bottom: 28px; }
+		}
+	</style>
+</head>
+<body>
+	<main class="page">
+		<div class="shell">
+			<div class="brand"><span class="brand-mark">↗</span><span>Fieldnote</span></div>
+			<p class="eyebrow">Data connection</p>
+			<h1>Send the right details to the right place.</h1>
+			<p class="intro">Capture a new record here and send it directly to your connected Google Sheet. Everything stays organized and ready for your team.</p>
+
+			<div class="content">
+				<section class="form-panel" aria-labelledby="form-title">
+					<div class="form-heading">
+						<h2 id="form-title">Add a new record</h2>
+						<span class="required">* Required</span>
+					</div>
+					<form id="data-form" action="https://script.google.com/macros/s/AKfycbzIgfyXUvjamclwWkyn2GoZEIqbVF647wjZFhhY49d7DJdUIPl6SHqAfYjC9IXDudgYaA/exec" method="post" target="submission-frame">
+						<div class="fields">
+							<div class="field">
+								<label for="name">Full name *</label>
+								<input id="name" name="name" type="text" placeholder="Alex Morgan" required>
+							</div>
+							<div class="field">
+								<label for="email">Email address *</label>
+								<input id="email" name="email" type="email" placeholder="alex@example.com" required>
+							</div>
+							<div class="field">
+								<label for="source">Data source</label>
+								<select id="source" name="source">
+									<option value="Website">Website</option>
+									<option value="Referral">Referral</option>
+									<option value="Event">Event</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div class="field">
+								<label for="company">Company</label>
+								<input id="company" name="company" type="text" placeholder="Company name">
+							</div>
+							<div class="field full">
+								<label for="notes">Notes</label>
+								<textarea id="notes" name="notes" placeholder="Add context for your team..."></textarea>
+							</div>
+						</div>
+						<div class="submit-row">
+							<button id="submit-button" type="submit">Send to Google Sheet</button>
+							<p id="status" class="status" role="status" aria-live="polite"></p>
+						</div>
+					</form>
+					<iframe name="submission-frame" id="submission-frame" title="Form submission" hidden></iframe>
+				</section>
+
+				<aside class="info-panel" aria-label="How the connection works">
+					<h2>One form. One clean row.</h2>
+					<div class="steps">
+						<div class="step"><span class="number">01</span><div><strong>Enter details</strong><span>Fill in the record fields on the left.</span></div></div>
+						<div class="step"><span class="number">02</span><div><strong>Send it</strong><span>Your submission is passed to the sheet connector.</span></div></div>
+						<div class="step"><span class="number">03</span><div><strong>See it in Sheets</strong><span>Each submission becomes a new row with a timestamp.</span></div></div>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</main>
+	<script>
+		const form = document.getElementById('data-form');
+		const button = document.getElementById('submit-button');
+		const status = document.getElementById('status');
+		const frame = document.getElementById('submission-frame');
+
+		form.addEventListener('submit', (event) => {
+			if (form.action.includes('REPLACE_WITH_YOUR_WEB_APP_ID')) {
+				event.preventDefault();
+				status.textContent = 'Add your Google Apps Script web app URL to connect this form.';
+				status.className = 'status error';
+				return;
+			}
+			button.disabled = true;
+			button.textContent = 'Sending...';
+			status.textContent = 'Adding your record...';
+			status.className = 'status';
+		});
+
+		frame.addEventListener('load', () => {
+			if (!button.disabled) return;
+			button.disabled = false;
+			button.textContent = 'Send to Google Sheet';
+			status.textContent = 'Record sent. Check your Google Sheet for the new row.';
+			status.className = 'status success';
+			form.reset();
+		});
+	</script>
+</body>
+</html>
